@@ -4,6 +4,7 @@
     {
         Information = 0,
         Warning = 1,
-        Error = 2
+        Error = 2,
+        Consent = 3
     }
 }

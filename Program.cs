@@ -2,15 +2,22 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StoreApi.Data;
 using StoreApi.Data.Models;
+using StoreApi.Filters;
+using StoreApi.Interfaces;
+using StoreApi.Processors;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers().AddJsonOptions(options =>
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ActionLoggingFilter>();
+})
+.AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 });
-builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -28,6 +35,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 });
 
+builder.Services.AddScoped<IConsentProcessor, ConsentProcessor>();
 
 builder.Services.AddIdentity<User, Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>()

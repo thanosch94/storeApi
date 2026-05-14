@@ -14,7 +14,7 @@ namespace StoreApi.Mapping
             //CreateMap<User,UserDto>().ReverseMap();
             CreateMap<Product, ProductDto>().ReverseMap();
             CreateMap<ImportSetting, ImportSettingsDto>().ReverseMap();
-
+            CreateMap<Category, CategoryDto>().ReverseMap();
 
         }
     }

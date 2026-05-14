@@ -10,7 +10,6 @@
         Youtube = 5,
         Tiktok = 6,
         Referral = 7,
-
         Internal = 8,
     }
 }

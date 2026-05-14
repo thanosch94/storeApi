@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -8,10 +7,7 @@ using StoreApi.Data.Dto;
 using StoreApi.Data.Enums;
 using StoreApi.Data.Models;
 using StoreApi.Services;
-using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace StoreApi.Controllers
 {
@@ -55,6 +51,7 @@ namespace StoreApi.Controllers
         [HttpGet("getallwithoptions")]
         public async Task<IActionResult> GetAllWithOptions(ListOptionsDto options)
         {
+
             var query = _context.Products.AsQueryable();
             // Search
             if (!string.IsNullOrWhiteSpace(options.SearchText))
@@ -66,15 +63,25 @@ namespace StoreApi.Controllers
                     x.AffiliateUrl.Contains(s) ||
                     x.Sku.Contains(s));
             }
+            if (options.MinPrice != null)
+            {
+                query = query.Where(x => (x.DiscountPrice ?? x.Price) >= options.MinPrice);
+            }
+
+            if (options.MaxPrice != null)
+            {
+                query = query.Where(x => (x.DiscountPrice ?? x.Price) <= options.MaxPrice);
+            }
 
             // Total count (optional – if you need pagination info)
             var totalCount = await query.CountAsync();
+            var page = options.PageNumber ?? 1;
+            var size = options.ItemsPerPage ?? 20;
+            var totalPages = (int)Math.Ceiling((double)totalCount / size);
 
             // Paging
             if (options.PagingEnabled)
             {
-                int page = options.PageNumber ?? 1;
-                int size = options.ItemsPerPage ?? 20;
 
                 query = query
                     .Skip((page - 1) * size)
@@ -99,7 +106,13 @@ namespace StoreApi.Controllers
                 Barcode = x.Barcode
             }).ToListAsync();
 
-            return Ok(data);
+            var dto = new OptionsListDto<ProductDto>
+            {
+                List = _mapper.Map<List<ProductDto>>(data),
+                TotalPages = totalPages
+
+            };
+            return Ok(dto);
         }
 
 
@@ -325,8 +338,6 @@ namespace StoreApi.Controllers
 
                         }
 
-
-
                     }
                     else
                     {
@@ -344,14 +355,10 @@ namespace StoreApi.Controllers
                             productToUpdate.Price = dataLine.full_price;
                             productToUpdate.DiscountPrice = dataLine.price;
 
-
-
                         }
                     }
 
-
                 }
-
 
             }
             await _context.SaveChangesAsync();
