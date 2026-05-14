@@ -454,6 +454,74 @@ BEGIN
     VALUES (N'20251118204655_AddedMoreImportSettings', N'9.0.11');
 END;
 
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20260502125535_AddedCategoriesAndAnalytics'
+)
+BEGIN
+    CREATE TABLE [store_analytics] (
+        [Id] uniqueidentifier NOT NULL,
+        [PageId] uniqueidentifier NOT NULL,
+        [EntityType] nvarchar(max) NOT NULL,
+        [TrackingMode] int NOT NULL,
+        [Device] int NOT NULL,
+        [Referer] nvarchar(max) NULL,
+        [Platform] nvarchar(max) NULL,
+        [CountryCode] nvarchar(max) NULL,
+        [Country] nvarchar(max) NULL,
+        [City] nvarchar(max) NULL,
+        [SessionHash] nvarchar(max) NOT NULL,
+        [VisitorHash] nvarchar(max) NULL,
+        [AffiliateUrlClick] nvarchar(max) NULL,
+        [SerialNumber] int NULL,
+        [Code] nvarchar(25) NULL,
+        [IsActive] bit NOT NULL,
+        [IsDeleted] bit NOT NULL,
+        [IsSeeded] bit NOT NULL,
+        [DateAdded] datetime2 NOT NULL,
+        [UserAdded] uniqueidentifier NULL,
+        [DateUpdated] datetime2 NULL,
+        [UserUpdated] uniqueidentifier NULL,
+        CONSTRAINT [PK_store_analytics] PRIMARY KEY ([Id])
+    );
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20260502125535_AddedCategoriesAndAnalytics'
+)
+BEGIN
+    CREATE TABLE [store_categories] (
+        [Id] uniqueidentifier NOT NULL,
+        [ParentId] uniqueidentifier NULL,
+        [Name] nvarchar(max) NOT NULL,
+        [Slug] nvarchar(max) NOT NULL,
+        [ImagePath] nvarchar(max) NULL,
+        [Description] nvarchar(max) NULL,
+        [SeoTitle] nvarchar(max) NULL,
+        [MetaDescription] nvarchar(max) NULL,
+        [SerialNumber] int NULL,
+        [Code] nvarchar(25) NULL,
+        [IsActive] bit NOT NULL,
+        [IsDeleted] bit NOT NULL,
+        [IsSeeded] bit NOT NULL,
+        [DateAdded] datetime2 NOT NULL,
+        [UserAdded] uniqueidentifier NULL,
+        [DateUpdated] datetime2 NULL,
+        [UserUpdated] uniqueidentifier NULL,
+        CONSTRAINT [PK_store_categories] PRIMARY KEY ([Id])
+    );
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20260502125535_AddedCategoriesAndAnalytics'
+)
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20260502125535_AddedCategoriesAndAnalytics', N'9.0.11');
+END;
+
 COMMIT;
 GO
 

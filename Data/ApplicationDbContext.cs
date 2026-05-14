@@ -23,6 +23,8 @@ namespace StoreApi.Data
         public virtual DbSet<Brand> Brands { get; set; }
         public virtual DbSet<AffiliateProgram> AffiliatePromgrams { get; set; }
         public virtual DbSet<ImportSetting> ImportSettings { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Analytics> Analytics { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
 
 
