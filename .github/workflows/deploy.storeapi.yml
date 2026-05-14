@@ -16,8 +16,8 @@ jobs:
       - name: Publish Store API
         shell: powershell
         run: |
-          dotnet restore .\StoreApi.csproj
-          dotnet publish .\StoreApi.csproj -c Release -o C:\deploy\publish\storeApi
+          dotnet restore .\storeApi.csproj
+          dotnet publish .\storeApi.csproj -c Release -o C:\deploy\publish\storeApi
 
       - name: Deploy Store API to IIS
         shell: powershell
