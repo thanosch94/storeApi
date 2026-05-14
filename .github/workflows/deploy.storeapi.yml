@@ -1,0 +1,39 @@
+name: Deploy Store API
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Publish Store API
+        shell: powershell
+        run: |
+          dotnet restore .\storeApi\storeApi.csproj
+          dotnet publish .\storeApi\storeApi.csproj -c Release -o C:\deploy\publish\storeApi
+
+      - name: Deploy Store API to IIS
+        shell: powershell
+        run: |
+          Import-Module WebAdministration
+
+          Stop-WebAppPool -Name "storeApi"
+
+          if (Test-Path "C:\inetpub\wwwroot\storeApi\*") {
+            Remove-Item "C:\inetpub\wwwroot\storeApi\*" -Recurse -Force
+          }
+
+          Copy-Item "C:\deploy\publish\storeApi\*" "C:\inetpub\wwwroot\storeApi" -Recurse -Force
+
+          if (Test-Path "C:\deploy\secrets\storeApi\appsettings.Production.json") {
+            Copy-Item "C:\deploy\secrets\storeApi\appsettings.Production.json" "C:\inetpub\wwwroot\storeApi\appsettings.Production.json" -Force
+          }
+
+          Start-WebAppPool -Name "storeApi"
