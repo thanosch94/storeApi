@@ -32,8 +32,8 @@ jobs:
 
           Copy-Item "C:\deploy\publish\storeApi\*" "C:\inetpub\wwwroot\storeApi" -Recurse -Force
 
-          if (Test-Path "C:\deploy\secrets\storeApi\appsettings.Production.json") {
-            Copy-Item "C:\deploy\secrets\storeApi\appsettings.Production.json" "C:\inetpub\wwwroot\storeApi\appsettings.Production.json" -Force
+          if (Test-Path "C:\deploy\secrets\storeApi\appsettings.json") {
+            Copy-Item "C:\deploy\secrets\storeApi\appsettings.json" "C:\inetpub\wwwroot\storeApi\appsettings.json" -Force
           }
 
           Start-WebAppPool -Name "storeApi"
