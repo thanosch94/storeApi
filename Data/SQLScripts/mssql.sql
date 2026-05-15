@@ -522,6 +522,53 @@ BEGIN
     VALUES (N'20260502125535_AddedCategoriesAndAnalytics', N'9.0.11');
 END;
 
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20260515175545_AnalyticsChanges'
+)
+BEGIN
+    DECLARE @var1 sysname;
+    SELECT @var1 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'[store_analytics]') AND [c].[name] = N'EntityType');
+    IF @var1 IS NOT NULL EXEC(N'ALTER TABLE [store_analytics] DROP CONSTRAINT [' + @var1 + '];');
+    ALTER TABLE [store_analytics] DROP COLUMN [EntityType];
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20260515175545_AnalyticsChanges'
+)
+BEGIN
+    ALTER TABLE [store_analytics] ADD [Action] nvarchar(max) NULL;
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20260515175545_AnalyticsChanges'
+)
+BEGIN
+    ALTER TABLE [store_analytics] ADD [Controller] nvarchar(max) NULL;
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20260515175545_AnalyticsChanges'
+)
+BEGIN
+    ALTER TABLE [store_analytics] ADD [Source] int NULL;
+END;
+
+IF NOT EXISTS (
+    SELECT * FROM [__EFMigrationsHistory]
+    WHERE [MigrationId] = N'20260515175545_AnalyticsChanges'
+)
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20260515175545_AnalyticsChanges', N'9.0.11');
+END;
+
 COMMIT;
 GO
 
