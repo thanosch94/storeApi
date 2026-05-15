@@ -24,7 +24,10 @@ jobs:
         run: |
           Import-Module WebAdministration
 
-          Stop-WebAppPool -Name "storeApi"
+          $appPool = Get-WebAppPoolState -Name "storeApi"
+          if ($appPool.Value -ne "Stopped") {
+            Stop-WebAppPool -Name "storeApi"
+          }
 
           if (Test-Path "C:\inetpub\wwwroot\storeApi\*") {
             Remove-Item "C:\inetpub\wwwroot\storeApi\*" -Recurse -Force
