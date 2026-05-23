@@ -9,9 +9,17 @@ jobs:
   build-and-deploy:
     runs-on: linux
 
+    env:
+      DOTNET_INSTALL_DIR: /home/rdp/.dotnet
+      DOTNET_ROOT: /home/rdp/.dotnet
+      PATH: /home/rdp/.dotnet:${{ env.PATH }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Create .NET install folder
+        run: mkdir -p /home/rdp/.dotnet
 
       - name: Setup .NET 9 SDK
         uses: actions/setup-dotnet@v4
