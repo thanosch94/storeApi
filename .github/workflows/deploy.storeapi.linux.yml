@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: linux
+    runs-on: [self-hosted, linux]
 
     env:
       DOTNET_INSTALL_DIR: /home/rdp/.dotnet
@@ -34,6 +34,9 @@ jobs:
           dotnet --version
           dotnet --list-sdks
 
+      - name: Find project file
+        run: find . -name "*.csproj"
+
       - name: Restore dependencies
         run: dotnet restore ./StoreApi.csproj
 
@@ -43,22 +46,9 @@ jobs:
       - name: Publish
         run: dotnet publish ./StoreApi.csproj --configuration Release --output ./publish --no-build
 
-      - name: Copy files to server
-        uses: easingthemes/ssh-deploy@v6.0.1
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
-          REMOTE_USER: ${{ secrets.SERVER_USER }}
-          SOURCE: "publish/"
-          TARGET: "/var/www/myapi/"
-          ARGS: "-rlgoDzvc --delete"
-
-      - name: Restart API service
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            sudo systemctl restart myapi.service
-            sudo systemctl status myapi.service --no-pager
+      - name: Deploy files
+        run: |
+          sudo systemctl stop myapi.service
+          sudo rsync -a --delete ./publish/ /var/www/myapi/
+          sudo systemctl start myapi.service
+          sudo systemctl status myapi.service --no-pager
