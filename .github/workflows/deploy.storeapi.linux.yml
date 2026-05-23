@@ -46,9 +46,32 @@ jobs:
       - name: Publish
         run: dotnet publish ./StoreApi.csproj --configuration Release --output ./publish --no-build
 
+      - name: Show published files
+        run: |
+          ls -la ./publish
+          find ./publish -name "*.dll"
+
+      - name: Create deploy folder
+        run: |
+          mkdir -p /var/www/storeApi
+
+      - name: Stop API service
+        run: |
+          sudo -n systemctl stop storeApi.service || true
+
       - name: Deploy files
         run: |
-          sudo systemctl stop actions.runner.thanosch94-storeApi.vps.service
-          sudo rsync -a --delete ./publish/ /var/www/storeApi/
-          sudo systemctl start actions.runner.thanosch94-storeApi.vps.service
-          sudo systemctl status actions.runner.thanosch94-storeApi.vps.service --no-pager
+          rsync -a --delete ./publish/ /var/www/storeApi/
+
+      - name: Show deployed files
+        run: |
+          ls -la /var/www/storeApi
+          find /var/www/storeApi -name "*.dll"
+
+      - name: Start API service
+        run: |
+          sudo -n systemctl start storeApi.service
+
+      - name: Check API service
+        run: |
+          sudo -n systemctl status storeApi.service --no-pager
