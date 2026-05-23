@@ -48,7 +48,7 @@ jobs:
 
       - name: Deploy files
         run: |
-          sudo systemctl stop myapi.service
-          sudo rsync -a --delete ./publish/ /var/www/myapi/
-          sudo systemctl start myapi.service
-          sudo systemctl status myapi.service --no-pager
+          sudo systemctl stop actions.runner.thanosch94-storeApi.vps.service
+          sudo rsync -a --delete ./publish/ /var/www/storeApi/
+          sudo systemctl start actions.runner.thanosch94-storeApi.vps.service
+          sudo systemctl status actions.runner.thanosch94-storeApi.vps.service --no-pager
