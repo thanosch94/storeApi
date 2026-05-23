@@ -74,4 +74,4 @@ jobs:
 
       - name: Check API service
         run: |
-          sudo -n systemctl status storeApi.service --no-pager
+          systemctl is-active storeApi.service
