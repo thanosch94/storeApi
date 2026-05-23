@@ -13,6 +13,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup .NET 9 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Check .NET
+        run: |
+          which dotnet
+          dotnet --version
+          dotnet --list-sdks
+
       - name: Restore dependencies
         run: dotnet restore ./StoreApi.csproj
 
