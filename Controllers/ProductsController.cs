@@ -355,9 +355,27 @@ namespace StoreApi.Controllers
                             productToUpdate.AffiliateId = dataLine.lw_product_id;
                             productToUpdate.AffiliateUrl = dataLine.tracking_url;
                             productToUpdate.FeatureImageUrl = dataLine.image_url;
-                            productToUpdate.Price = dataLine.full_price;
-                            productToUpdate.DiscountPrice = dataLine.price;
                             productToUpdate.DateUpdated = DateTime.Now;
+
+                            if (!String.IsNullOrEmpty(dataLine.full_price))
+                            {
+                                decimal fullPrice = decimal.Parse(dataLine.full_price, CultureInfo.CurrentCulture);
+                                productToUpdate.Price = fullPrice;
+
+                            }
+
+                            if (!String.IsNullOrEmpty(dataLine.price))
+                            {
+                                decimal discountPrice = decimal.Parse(dataLine.price, CultureInfo.CurrentCulture);
+
+                                productToUpdate.DiscountPrice = discountPrice;
+
+                                if (productToUpdate.Price == null)
+                                {
+                                    productToUpdate.Price = discountPrice;
+                                }
+
+                            }
 
                         }
                     }
