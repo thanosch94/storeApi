@@ -256,7 +256,7 @@ namespace StoreApi.Controllers
             {
                 if (!String.IsNullOrEmpty(dto.GetUrl))
                 {
-                    await FilesHandler.GetFileFromUrl(dto);
+                    await FilesHandler.GetFileFromUrl(dto, _context);
                 }
 
                 var products = FilesHandler.GetDataFromCSV(AppContext.BaseDirectory + "Downloads/" + dto.Name);

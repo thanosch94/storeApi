@@ -1,14 +1,19 @@
-﻿using StoreApi.Data.Dto;
+﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using StoreApi.Data;
+using StoreApi.Data.Dto;
+using StoreApi.Data.Enums;
 using System.Dynamic;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace StoreApi.Services
 {
     public class FilesHandler
     {
-        public static async Task GetFileFromUrl(ImportSettingsDto dto)
+        public static async Task GetFileFromUrl(ImportSettingsDto dto, ApplicationDbContext context)
         {
             //Arrange
             //var folderPath = @$"C:\Users\chatz\Downloads\"; ;
@@ -21,11 +26,19 @@ namespace StoreApi.Services
                 try
                 {
                     var path = Path.Combine(AppContext.BaseDirectory, "Downloads");
+                    LogService.CreateLog($"Path to use: {path}", LogTypeEnum.Information, LogOriginEnum.StoreApp, Guid.Empty, context);
 
                     // Ensure the folder exists
                     if (!Directory.Exists(path))
                     {
-                        Directory.CreateDirectory(path);
+                        try
+                        {
+                            Directory.CreateDirectory(path);
+                        }catch(Exception ex)
+                        {
+                            LogService.CreateLog($"Could not create path: {path}, Error: {ex}", LogTypeEnum.Information, LogOriginEnum.StoreApp, Guid.Empty, context);
+
+                        }
                     }
 
                     // Full path to save the file
