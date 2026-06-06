@@ -279,6 +279,7 @@ namespace StoreApi.Controllers
 
         private async Task AddOrUpdateProducts(List<dynamic> dataLines, ImportSettingsDto dto)
         {
+            dto.UpdateExistingEntities = true; //TODO send it from the front end
             foreach (var dataLine in dataLines)
             {
                 {
