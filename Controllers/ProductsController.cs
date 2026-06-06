@@ -306,6 +306,8 @@ namespace StoreApi.Controllers
                         productToAdd.AffiliateId = dataLine.lw_product_id;
                         productToAdd.AffiliateUrl = dataLine.tracking_url;
                         productToAdd.FeatureImageUrl = dataLine.image_url;
+                        productToAdd.DateAdded = DateTime.Now;
+                        productToAdd.DateUpdated = DateTime.Now;
 
                         if (!String.IsNullOrEmpty(dataLine.full_price))
                         {
@@ -354,6 +356,7 @@ namespace StoreApi.Controllers
                             productToUpdate.FeatureImageUrl = dataLine.image_url;
                             productToUpdate.Price = dataLine.full_price;
                             productToUpdate.DiscountPrice = dataLine.price;
+                            productToUpdate.DateUpdated = DateTime.Now;
 
                         }
                     }
