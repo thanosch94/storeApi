@@ -302,7 +302,7 @@ namespace StoreApi.Controllers
                     {
                         var productToAdd = new Product();
                         productToAdd.Name = dataLine.product_name;
-                        productToAdd.Sku = dataLine.sku;
+                        productToAdd.Sku = dataLine.GetType().GetProperty("sku") != null ? dataLine.sku : dataLine.product_id;
                         productToAdd.Description = dataLine.description;
                         productToAdd.AffiliateId = dataLine.lw_product_id;
                         productToAdd.AffiliateUrl = dataLine.tracking_url;
